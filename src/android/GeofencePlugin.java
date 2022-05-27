@@ -149,7 +149,7 @@ public class GeofencePlugin extends CordovaPlugin {
         };
 
         if (!hasPermissions(permissions)) {
-            PermissionHelper.requestPermissions(this, 0, permissions);
+            callbackContext.success();
         } else {
             callbackContext.success();
         }
