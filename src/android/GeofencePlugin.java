@@ -106,7 +106,12 @@ public class GeofencePlugin extends CordovaPlugin {
                     callbackContext.success(Gson.get().toJson(geoNotifications));
                 } else if (action.equals("initialize")) {
                     initialize(callbackContext);
-                } else if (action.equals("deviceReady")) {
+                } else if (action.equals("permissions")){
+                    permissions(callbackContext);
+                } else if (action.equals("hasPermissions")){
+                    haspermissions(callbackContext);
+                }
+                else if (action.equals("deviceReady")) {
                     deviceReady();
                 } else if (action.equals("setItem")) {
                     JSONObject item = args.optJSONObject(0);
@@ -154,6 +159,28 @@ public class GeofencePlugin extends CordovaPlugin {
         } else {
             webView.sendJavascript(js);
         }
+    }
+
+    private void haspermissions(CallbackContext callbackContext) {
+        String[] permissions = {
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        };
+        if (hasPermissions(permissions)) {
+            callbackContext.success();
+        } else {
+            callbackContext.error("no");
+        }
+    }
+
+
+    private void permissions(CallbackContext callbackContext) {
+        String[] permissions = {
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        };
+            PermissionHelper.requestPermissions(this, 0, permissions);
+            callbackContext.success();
     }
 
     private void initialize(CallbackContext callbackContext) {
