@@ -61,7 +61,7 @@
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <receiver android:name="com.cowbell.cordova.geofence.BootReceiver">
+            <receiver android:exported="false" android:name="com.cowbell.cordova.geofence.BootReceiver">
                 <intent-filter>
                     <action android:name="android.intent.action.BOOT_COMPLETED" />
                 </intent-filter>
@@ -72,6 +72,7 @@
             <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
             <uses-permission android:name="android.permission.VIBRATE" />
         </config-file>
 
@@ -125,7 +126,7 @@
 
         <config-file target="*-Info.plist" parent="UIBackgroundModes">
             <array>
-                <string>remote-notification</string>
+                <string>This app requires it to open doors in background</string>
             </array>
         </config-file>
         <config-file target="config.xml" parent="/*">
