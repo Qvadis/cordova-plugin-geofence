@@ -37,6 +37,15 @@ module.exports = {
     initialize: function (success, error) {
         return execPromise(success, error, "GeofencePlugin", "initialize", []);
     },
+    hasPermissions: function (success, error) {
+        return execPromise(success, error, "GeofencePlugin", "hasPermissions", []);
+    },
+    permissions: function (success, error) {
+        return execPromise(success, error, "GeofencePlugin", "permissions", []);
+    },
+    setItem: function (item, success, error) {
+        return execPromise(success, error, "GeofencePlugin", "setItem", item);
+    },
     /**
      * Adding new geofence to monitor.
      * Geofence could override the previously one with the same id.
@@ -133,11 +142,11 @@ module.exports = {
 function execPromise(success, error, pluginName, method, args) {
     return new Promise(function (resolve, reject) {
         exec(function (result) {
-                resolve(result);
-                if (typeof success === "function") {
-                    success(result);
-                }
-            },
+            resolve(result);
+            if (typeof success === "function") {
+                success(result);
+            }
+        },
             function (reason) {
                 reject(reason);
                 if (typeof error === "function") {
