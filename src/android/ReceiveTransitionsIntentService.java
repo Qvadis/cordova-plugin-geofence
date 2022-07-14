@@ -86,20 +86,21 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
                 if (geoNotifications.size() > 0) {
                     broadcastIntent.putExtra("transitionData", Gson.get().toJson(geoNotifications));
-                    try {
-                        volleyApi.tryRelogin(new VolleyCallback(){
-                            @Override
-                            public void onSuccess(JSONObject result) throws JSONException {
-                                JSONObject userData = new JSONObject(localStorage.getItem("user"));
-                                if(result.get("restype")=="success"){
-                                    volleyApi.afterRelogin(true,result,userData);
-                                  //  GeofencePlugin.onTransitionReceived(geoNotifications,notifier);
-                                }
+                    JSONObject json = new JSONObject();
+                    addProperty(json, "userId", "JuanGeo");
+                    addProperty(json, "msg", Gson.get().toJson(geoNotifications));
+
+
+                    volleyApi.postLog(json, new VolleyCallback(){
+                        @Override
+                        public void onSuccess(JSONObject result) throws JSONException {
+                            JSONObject userData = new JSONObject(localStorage.getItem("user"));
+                            if(result.get("restype")=="success"){
+                                //volleyApi.afterRelogin(true,result,userData);
+                              //  GeofencePlugin.onTransitionReceived(geoNotifications,notifier);
                             }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                        }
+                    });
                 }
             } else {
                 String error = "Geofence transition error: " + transitionType;
@@ -108,5 +109,16 @@ public class ReceiveTransitionsIntentService extends IntentService {
             }
         }
         sendBroadcast(broadcastIntent);
+    }
+    private void addProperty(JSONObject obj, String key, Object value) {
+        try {
+            if (value == null) {
+                obj.put(key, JSONObject.NULL);
+            } else {
+                obj.put(key, value);
+            }
+        } catch (JSONException ignored) {
+            //Believe exception only occurs when adding duplicate keys, so just ignore it
+        }
     }
 }

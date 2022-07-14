@@ -112,25 +112,37 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
             if (geoNotifications.size() > 0) {
                 //broadcastIntent.putExtra("transitionData", Gson.get().toJson(geoNotifications));
-                try {
+                JSONObject json = new JSONObject();
+                addProperty(json, "userId", "JuanGeo");
+                addProperty(json, "msg", Gson.get().toJson(geoNotifications));
 
-                    volleyApi.tryRelogin(new VolleyCallback(){
-                        @Override
-                        public void onSuccess(JSONObject result) throws JSONException {
-                            JSONObject userData = new JSONObject(localStorage.getItem("user"));
-                            if(result.get("restype")=="success"){
-                                volleyApi.afterRelogin(true,result,userData);
-                                onTransitionReceived(geoNotifications);
-                            }
+
+                volleyApi.postLog(json, new VolleyCallback(){
+                    @Override
+                    public void onSuccess(JSONObject result) throws JSONException {
+                       //  JSONObject userData = new JSONObject(localStorage.getItem("user"));
+                        if(result.get("restype")=="success"){
+                            // volleyApi.afterRelogin(true,result,userData);
+                            onTransitionReceived(geoNotifications);
                         }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                    }
+                });
             }
         } else {
             // Log the error.
             Log.e(TAG, "Geofence transition error: invalid transition type %1$d");
+        }
+    }
+
+    private void addProperty(JSONObject obj, String key, Object value) {
+        try {
+            if (value == null) {
+                obj.put(key, JSONObject.NULL);
+            } else {
+                obj.put(key, value);
+            }
+        } catch (JSONException ignored) {
+            //Believe exception only occurs when adding duplicate keys, so just ignore it
         }
     }
 
@@ -139,9 +151,9 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         for (int i=0; i<notifications.size();i++){
             String action = notifications.get(i).w_actions;
             GeoNotification notification = notifications.get(i);
-            JSONArray obj = new JSONArray(action);
+            // JSONArray obj = new JSONArray(action);
             final Boolean[] notifFlag = {false};
-            for(int j=0; j<obj.length(); j++) {
+           /* for(int j=0; j<obj.length(); j++) {
                 JSONObject act = obj.getJSONObject(j);
                 if (act.get("type").equals("scene")) {
                     JSONObject scene_obj = new JSONObject();
@@ -173,7 +185,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
                         }
                     });
                 }
-            }
+            } */
             if(notifFlag[0] == true){
                 sendNotification(notification);
             } else {
@@ -217,10 +229,10 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String description = "";
         if (notificationDetails.transitionType == Geofence.GEOFENCE_TRANSITION_ENTER){
-             description = "Triggered "+notificationDetails.name ;
+             description = "Triggered entrada " ;//+ notificationDetails.name ;
         }
         if (notificationDetails.transitionType == Geofence.GEOFENCE_TRANSITION_EXIT){
-             description = "Triggered "+notificationDetails.name ;
+             description = "Triggered salida";//+notificationDetails.name ;
         }
 
         // Android O requires a Notification Channel.
@@ -263,7 +275,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 //                 In a real app, you may want to use a library like Volley
 //                 to decode the Bitmap.
                 .setColor(Color.WHITE)
-                .setContentTitle("Location Automation")
+                .setContentTitle("Puerta geolocalizada")
                 .setContentText(description)
                 .setContentIntent(notificationPendingIntent);
 

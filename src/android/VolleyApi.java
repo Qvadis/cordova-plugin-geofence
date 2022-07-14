@@ -28,8 +28,8 @@ public class VolleyApi {
     private static Logger logger;
     private static RequestQueue queue;
     private static LocalStorage localStorage;
-    private String DEFAULT_BASE_URL = "https://api.kiot.io";
-    private static String baseUrlExt = "api/v1/";
+    private String DEFAULT_BASE_URL = "https://dev.myqvadis.com";
+    private static String baseUrlExt = "";
     static Map<String, String> headers = new HashMap<>();
     private static String BASE_URL = "";
     private static VolleyApi mThis;
@@ -79,14 +79,15 @@ public class VolleyApi {
     }
 
     public static JSONObject tryRelogin(VolleyCallback callback) throws JSONException {
-        JSONObject userData = new JSONObject(localStorage.getItem("user"));
-        JSONObject res = postLogin(userData.getJSONObject("user"),callback);
-       // JSONObject res = null;
+        //JSONObject userData = new JSONObject(localStorage.getItem("user"));
+        //JSONObject res = postLogin(userData.getJSONObject("user"),callback);
+       JSONObject res = null;
 //        if(res.get("restype")=="success"){
 //            afterRelogin(true,res,userData);
 //        } else {
 //            afterRelogin(false,res,userData);
 //        }
+        //return res;
         return res;
     }
 
@@ -163,21 +164,26 @@ public class VolleyApi {
 
     }
 
-    public static String getTokens(Boolean except_url) throws JSONException {
-        JSONObject baseurlobj = new JSONObject(localStorage.getItem("base_url"));
-        BASE_URL = baseurlobj.getString("base_url");
+    public static String  getTokens(Boolean except_url) throws JSONException {
+        // JSONObject baseurlobj = new JSONObject(localStorage.getItem("base_url"));
+       // BASE_URL = baseurlobj.getString("base_url");
         if(except_url==true){
-            headers.remove("Authorization");
-            return BASE_URL+'/';
+            // headers.remove("Authorization");
+            return mThis.DEFAULT_BASE_URL+'/';
         } else {
-            String token = localStorage.getItem("token");
-            headers.put("Authorization", "Bearer " + token);
-            return BASE_URL +'/'+ baseUrlExt;
+            // String token = localStorage.getItem("token");
+            // headers.put("Authorization", "Bearer " + token);
+            return mThis.DEFAULT_BASE_URL +'/'+ baseUrlExt;
         }
     }
 
     public static JSONObject postLogin(JSONObject user, VolleyCallback callback){
         JSONObject res = volleyPost("user/authenticate",user,true, callback);
+        return res;
+    }
+
+    public static JSONObject postLog(JSONObject obj, VolleyCallback callback){
+        JSONObject res = volleyPost("/api/qUsers/logDebugToCloud?",obj,true, callback);
         return res;
     }
 
