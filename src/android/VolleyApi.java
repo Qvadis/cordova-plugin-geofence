@@ -134,7 +134,7 @@ public class VolleyApi {
                      s = "error";
                 }
 
-                try {
+                /*try {
                     err.put("message",s);
                     if(error.networkResponse.statusCode == 424){
                         callback.onSuccess(err);
@@ -148,7 +148,7 @@ public class VolleyApi {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
+                }*/
                 //logger.log(Log.DEBUG,error.getMessage());
                 error.printStackTrace();
             }
@@ -184,6 +184,11 @@ public class VolleyApi {
 
     public static JSONObject postLog(JSONObject obj, VolleyCallback callback){
         JSONObject res = volleyPost("/api/qUsers/logDebugToCloud?",obj,true, callback);
+        return res;
+    }
+
+    public static JSONObject triggerEvent(JSONObject obj, String token, VolleyCallback callback){
+        JSONObject res = volleyPost("/api/userEvents/triggerEvent?access_token="+token,obj,true, callback);
         return res;
     }
 

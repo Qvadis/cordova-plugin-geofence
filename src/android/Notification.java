@@ -16,7 +16,7 @@ public class Notification {
     @Expose public long[] vibrate = new long[] { 1000 };
     @Expose public String icon = "";
     @Expose public String smallIcon = "";
-    @Expose public Object data;
+    @Expose public NotificationData data;
     @Expose public boolean openAppOnClick;
 
     public void setContext(Context context) {

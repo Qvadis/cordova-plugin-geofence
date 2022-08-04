@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Listener for geofence transition changes.
@@ -112,15 +113,46 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
             if (geoNotifications.size() > 0) {
                 //broadcastIntent.putExtra("transitionData", Gson.get().toJson(geoNotifications));
-                JSONObject json = new JSONObject();
-                addProperty(json, "userId", "JuanGeo");
-                addProperty(json, "msg", Gson.get().toJson(geoNotifications));
+                List<JSONObject> json = new ArrayList<JSONObject>();
+                for (GeoNotification geoNotif:geoNotifications) {
+                    JSONObject jsonAux = new JSONObject();
+                    addProperty(jsonAux, "userId", geoNotif.notification.data.userId);
+                    addProperty(jsonAux, "token", geoNotif.notification.data.token);
 
+                    String transitionType = (geoNotif.transitionType == 1) ? "in" : "out";
+                    JSONObject event = new JSONObject();
+                    addProperty(event, "id", geoNotif.id);
+                    JSONObject eventData = new JSONObject();
+                    addProperty(eventData, "action", transitionType);
+                    addProperty(eventData, "longitude", geoNotif.longitude);
+                    addProperty(eventData, "latitude", geoNotif.latitude);
+                    addProperty(eventData, "name", geoNotif.name);
+                    addProperty(eventData, "radius", geoNotif.radius);
+                    // addProperty(eventData, "notif", Gson.get().toJson(geoNotif));
+                    addProperty(event, "eventData", eventData);
 
-                volleyApi.postLog(json, new VolleyCallback(){
+                    addProperty(jsonAux, "msg", event);
+
+                    json.add(jsonAux);
+                    
+                    /*volleyApi.triggerEvent(jsonAux, geoNotif.notification.data.token, new VolleyCallback(){
+                        @Override
+                        public void onSuccess(JSONObject result) throws JSONException {
+                            //  JSONObject userData = new JSONObject(localStorage.getItem("user"));
+                            if(result.get("restype")=="success"){
+                                // volleyApi.afterRelogin(true,result,userData);
+                                // onTransitionReceived(geoNotifications);
+                            }
+                        }
+                    });*/
+                }
+                JSONObject jsonpost = new JSONObject();
+                addProperty(jsonpost, "userId", "JuanGeo");
+                addProperty(jsonpost, "msg", json);
+                volleyApi.postLog(jsonpost, new VolleyCallback(){
                     @Override
                     public void onSuccess(JSONObject result) throws JSONException {
-                       //  JSONObject userData = new JSONObject(localStorage.getItem("user"));
+                        //  JSONObject userData = new JSONObject(localStorage.getItem("user"));
                         if(result.get("restype")=="success"){
                             // volleyApi.afterRelogin(true,result,userData);
                             onTransitionReceived(geoNotifications);
