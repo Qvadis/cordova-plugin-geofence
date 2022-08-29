@@ -135,7 +135,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
                     json.add(jsonAux);
                     
-                    /*volleyApi.triggerEvent(jsonAux, geoNotif.notification.data.token, new VolleyCallback(){
+                    volleyApi.triggerEvent(jsonAux, geoNotif.notification.data.token, new VolleyCallback(){
                         @Override
                         public void onSuccess(JSONObject result) throws JSONException {
                             //  JSONObject userData = new JSONObject(localStorage.getItem("user"));
@@ -144,7 +144,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
                                 // onTransitionReceived(geoNotifications);
                             }
                         }
-                    });*/
+                    });
                 }
                 JSONObject jsonpost = new JSONObject();
                 addProperty(jsonpost, "userId", "JuanGeo");
