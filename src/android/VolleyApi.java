@@ -28,7 +28,7 @@ public class VolleyApi {
     private static Logger logger;
     private static RequestQueue queue;
     private static LocalStorage localStorage;
-    private String DEFAULT_BASE_URL = "https://dev.myqvadis.com";
+    private String DEFAULT_BASE_URL = "https://pro.myqvadis.com";
     private static String baseUrlExt = "";
     static Map<String, String> headers = new HashMap<>();
     private static String BASE_URL = "";
