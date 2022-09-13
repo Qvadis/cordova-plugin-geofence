@@ -261,10 +261,10 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String description = "";
         if (notificationDetails.transitionType == Geofence.GEOFENCE_TRANSITION_ENTER){
-             description = "Triggered entrada " ;//+ notificationDetails.name ;
+             description = "<------- " + notificationDetails.name ;
         }
         if (notificationDetails.transitionType == Geofence.GEOFENCE_TRANSITION_EXIT){
-             description = "Triggered salida";//+notificationDetails.name ;
+             description = "-------> " + notificationDetails.name ;
         }
 
         // Android O requires a Notification Channel.
@@ -307,7 +307,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 //                 In a real app, you may want to use a library like Volley
 //                 to decode the Bitmap.
                 .setColor(Color.WHITE)
-                .setContentTitle("Puerta geolocalizada")
+                .setContentTitle("RingToOpen")
                 .setContentText(description)
                 .setContentIntent(notificationPendingIntent);
 
